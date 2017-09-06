@@ -1,7 +1,7 @@
 <?php
 /* 
  * Copyright (C) 2007-2010 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) ---Put here your own copyright and developer email---
+ * Copyright (C) 2016-2017 Patrick Delcroix <pmpdelcroix@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,6 +169,7 @@ if ($cancel){
         //retrive the data
         $object->userId=GETPOST('Userid');
 		$object->date_start=dol_mktime(0, 0, 0,GETPOST('Yearweekdatemonth'),GETPOST('Yearweekdateday'),GETPOST('Yearweekdateyear'));
+		$object->date_end=dol_mktime(0, 0, 0,GETPOST('dateendmonth'),GETPOST('dateendday'),GETPOST('dateendyear'));
 		$object->status=GETPOST('Status');
 		$object->target=GETPOST('Target');
 		$object->project_tasktime_list=GETPOST('Projecttasktimelist');
@@ -405,7 +406,22 @@ switch ($action) {
 			print $form->select_date($object->date_start,'Yearweekdate');
 		}
 		}else{
-			print dol_print_date($object->date_start,'day').getYearWeek(0,0,0,$object->date_start);
+			print dol_print_date($object->date_start,'day');//getYearWeek(0,0,0,$object->date_start);
+		}
+		print "</td>";
+		print "\n</tr>\n";
+		print "<tr>\n";
+// show the field date_start
+
+		print '<td class="fieldrequired">'.$langs->trans('dateend').' </td><td>';
+		if($edit==1){
+		if($new==1){
+			print $form->select_date(-1,'dateend');
+		}else{
+			print $form->select_date($object->date_end,'dateend');
+		}
+		}else{
+			print dol_print_date($object->date_end,'day');
 		}
 		print "</td>";
 		print "\n</tr>\n";
@@ -623,6 +639,7 @@ switch ($action) {
     
 		$sql.=' t.fk_userid,';
 		$sql.=' t.date_start,';
+                $sql.=' t.date_end,';
 		$sql.=' t.status';
 		//$sql.=' t.target,';
 		//$sql.=' t.fk_project_tasktime_list,';
@@ -701,6 +718,8 @@ if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))
 		print "\n";
 		print_liste_field_titre($langs->trans('Yearweekdate'),$PHP_SELF,'t.date_start','',$param,'',$sortfield,$sortorder);
 		print "\n";
+		//print_liste_field_titre($langs->trans('dateend'),$PHP_SELF,'t.date_end','',$param,'',$sortfield,$sortorder);
+		//print "\n";
 		print_liste_field_titre($langs->trans('Status'),$PHP_SELF,'t.status','',$param,'',$sortfield,$sortorder);
 		print "\n";
 		//print_liste_field_titre($langs->trans('Target'),$PHP_SELF,'t.target','',$param,'',$sortfield,$sortorder);
@@ -761,6 +780,7 @@ if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))
 				print $basedurl.$obj->rowid."'\" >";
 				print "<td>".print_generic('user','rowid',$obj->fk_userid,'lastname','firstname',' ')."</td>";
 				print "<td>".dol_print_date($obj->date_start,'day')." (".getYearWeek(0,0,0,$db->jdate($obj->date_start)).")</td>";
+				//print "<td>".dol_print_date($obj->date_end,'day')." (".getYearWeek(0,0,0,$db->jdate($obj->date_end)).")</td>";//FIXME
 				print "<td>".$langs->trans($obj->status)."</td>";
 				//print "<td>".$langs->trans($obj->target)."</td>";
 				//print "<td>".$obj->fk_project_tasktime_list."</td>";
@@ -780,8 +800,8 @@ if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))
     print '</table>'."\n";
     print '</from>'."\n";
     // new button
-    print '<a href="?action=create" class="button" role="button">'.$langs->trans('New');
-    print ' '.$langs->trans('Timesheetuser')."</a>\n";
+    //print '<a href="?action=create" class="button" role="button">'.$langs->trans('New');
+ //   print ' '.$langs->trans('Timesheetuser')."</a>\n";
 
     
 }
